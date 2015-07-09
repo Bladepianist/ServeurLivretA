@@ -59,10 +59,12 @@ namespace ServeurLivretA
 
         static void Main(string[] args)
         {
+            Socket sock = null;
+
             try
             {
                 // Création de la socket
-                Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 // Attachement à un n° port donné
                 IPEndPoint iep = new IPEndPoint(IPAddress.Any, 1212);
@@ -75,15 +77,21 @@ namespace ServeurLivretA
                 while (true)
                 {
                     Socket sockClient = sock.Accept(); // On attend qu'un client se connecte. Serveur en pause. 
-                                                    //Si client, Accept retourne Socket utilisé pour communiquer avec le client
+                    //Si client, Accept retourne Socket utilisé pour communiquer avec le client
 
                     ThreadPool.QueueUserWorkItem(new WaitCallback(Communication), sockClient);
                 }
+
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine("/!\\ Erreur : " + ex.Message + "/!\\");
+            }
+            finally
+            {
+                sock.Shutdown(SocketShutdown.Both);
+                sock.Close();
             }
         }
     }
