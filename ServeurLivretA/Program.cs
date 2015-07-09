@@ -32,9 +32,9 @@ namespace ServeurLivretA
 
         static byte[] CalculGain(byte[] year, byte[] sommeDepart)
         {
-            byte[] b_sommeFinale;
+            byte[] b_sommeFinale = null;
             int i_annee;
-            double d_somme, d_sommeFinale = 0;
+            double d_somme;
 
             try
             {
@@ -43,17 +43,16 @@ namespace ServeurLivretA
 
                 for (int i = 0; i < i_annee; i++)
                 {
-                    d_sommeFinale = d_sommeFinale + (0.01 * d_sommeFinale);
+                    d_somme = d_somme + (0.01 * d_somme);
                 }
+
+                b_sommeFinale = BitConverter.GetBytes(d_somme);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 
-                throw;
+                Console.WriteLine("/!\\" + ex.Message + "/!\\");
             }
-
-            b_sommeFinale = BitConverter.GetBytes(d_sommeFinale);
-
             return b_sommeFinale;
         }
 
